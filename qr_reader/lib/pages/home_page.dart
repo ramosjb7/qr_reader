@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_reader/pages/direcciones_page.dart';
 import 'package:qr_reader/pages/mapas_page.dart';
+
+import 'package:qr_reader/providers/db_ptovider.dart';
+import 'package:qr_reader/providers/ui_provider.dart';
 
 import '../widgets/custom_navigatorbar.dart';
 import '../widgets/scan_button.dart';
@@ -20,7 +24,7 @@ class HomePage extends StatelessWidget {
           )
         ],
       ),
-      body: const _HomePageBody(),
+      body: _HomePageBody(),
       bottomNavigationBar: const  CustomNavigatorBar(),
       floatingActionButton: const  ScanButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -30,23 +34,31 @@ class HomePage extends StatelessWidget {
 
 
 class _HomePageBody extends StatelessWidget {
-  const _HomePageBody({super.key});
+  // const _HomePageBody({super.key});
 
   @override
   Widget build(BuildContext context) {
 
+    //obtener el selcted menu opt
+    final uiProvider = Provider.of<UiProvider>(context);
+
     //Cambiar para mostrar la pagina respectiva
-    final currentIndex =1;
+    final currentIndex = uiProvider.selectedMenuOpt;
+  
+    //sTODO: Temporal leer la base de datos
+    final tempScan = ScanModel(valor: 'http://google.com');
+    DBProvider.db.nuevoScan(tempScan); 
+
     switch(currentIndex){
 
       case 0:
-        return MapasPage();
+        return const MapasPage();
       case 1: 
-        return DireccionesPage();
+        return const DireccionesPage();
 
       default:
-        return MapasPage();
+        return const MapasPage();
     }
-    return const Placeholder();
+    // return Container();
   }
 }
