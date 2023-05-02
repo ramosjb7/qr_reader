@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:qr_reader/pages/direcciones_page.dart';
 import 'package:qr_reader/pages/mapas_page.dart';
 
-import 'package:qr_reader/providers/db_ptovider.dart';
+import 'package:qr_reader/providers/scan_list_provider.dart';
 import 'package:qr_reader/providers/ui_provider.dart';
 
 import '../widgets/custom_navigatorbar.dart';
@@ -20,7 +20,9 @@ class HomePage extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.delete_forever),
-            onPressed: (){},
+            onPressed: (){
+              Provider.of<ScanListProvider>(context, listen: false).borrarTodos();
+            },
           )
         ],
       ),
@@ -45,15 +47,17 @@ class _HomePageBody extends StatelessWidget {
     //Cambiar para mostrar la pagina respectiva
     final currentIndex = uiProvider.selectedMenuOpt;
   
-    //sTODO: Temporal leer la base de datos
-    final tempScan = ScanModel(valor: 'http://google.com');
-    DBProvider.db.nuevoScan(tempScan); 
+    //usar el sacanlistprovider
+    final scanListProvider = Provider.of<ScanListProvider>(context, listen: false);
+
 
     switch(currentIndex){
 
       case 0:
+        scanListProvider.cargarScanPorTipo('geo');
         return const MapasPage();
-      case 1: 
+      case 1:
+         scanListProvider.cargarScanPorTipo('http');
         return const DireccionesPage();
 
       default:
